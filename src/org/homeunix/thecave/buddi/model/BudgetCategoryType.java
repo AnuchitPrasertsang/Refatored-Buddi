@@ -43,6 +43,7 @@ public abstract class BudgetCategoryType {
 	 * @return
 	 */
 	public abstract Date getBudgetPeriodOffset(Date date, int offset);
+
 	
 	/**
 	 * Returns the date format associated with this budget period type.  This is
@@ -104,4 +105,12 @@ public abstract class BudgetCategoryType {
 	 * @return
 	 */
 	public abstract String getKey();
+
+    public Date getStartOfNextBudgetPeriod(Date date) {
+        return getBudgetPeriodOffset(date, 1);
+    }
+
+    public Date getStartOfPreviousBudgetPeriod(Date date) {
+        return getBudgetPeriodOffset(date, -1);
+    }
 }
