@@ -39,4 +39,8 @@ public class BudgetPeriod {
     public long getDayCount() {
         return period.getDayCount();
     }
+
+    public Period getPeriod() {
+        return period;
+    }
 }
