@@ -139,10 +139,10 @@ public class BudgetCategoryImpl extends SourceImpl implements BudgetCategory {
     }
 
     private double getAmountInPeriod(Period period, BudgetPeriod budgetPeriod) {
-        long amount = getAmountOfBudgetPeriod(budgetPeriod);
-        long daysInPeriod = budgetPeriod.getDayCount();
-        long daysBetween = period.getDayCount();
-        return (double) amount / (double) daysInPeriod * daysBetween;
+        long amountOfBudgetPeriod = getAmountOfBudgetPeriod(budgetPeriod);
+        long budgetPeriodDayCount = budgetPeriod.getDayCount();
+        long periodDayCount = period.getDayCount();
+        return (double) amountOfBudgetPeriod / (double) budgetPeriodDayCount * periodDayCount;
     }
 
     private long getAmountOfBudgetPeriod(BudgetPeriod budgetPeriod) {
