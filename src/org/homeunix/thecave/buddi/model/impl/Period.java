@@ -18,4 +18,10 @@ public class Period {
     public Date getEndDate() {
         return endDate;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        Period another = (Period) o;
+        return this.startDate.equals(another.startDate);
+    }
 }
