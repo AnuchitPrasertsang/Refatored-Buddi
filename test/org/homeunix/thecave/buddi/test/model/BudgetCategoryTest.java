@@ -34,12 +34,12 @@ public class BudgetCategoryTest {
 			bc.setAmount(DateUtil.getDate(2007, Calendar.OCTOBER, 1), 333);
 			bc.setAmount(DateUtil.getDate(2007, Calendar.NOVEMBER, 1), 331);
 			
-			assertEquals((double) 100, bc.getAmount(DateUtil.getDate(2007, Calendar.APRIL, 1)), 1);
-			assertEquals((double) 100, bc.getAmount(DateUtil.getDate(2007, Calendar.APRIL, 10)), 1);
-			assertEquals((double) 100, bc.getAmount(DateUtil.getDate(2007, Calendar.APRIL, 28)), 1);
+			assertEquals((double) 100, bc.getBudgetPeriodContainingDate(DateUtil.getDate(2007, Calendar.APRIL, 1)), 1);
+			assertEquals((double) 100, bc.getBudgetPeriodContainingDate(DateUtil.getDate(2007, Calendar.APRIL, 10)), 1);
+			assertEquals((double) 100, bc.getBudgetPeriodContainingDate(DateUtil.getDate(2007, Calendar.APRIL, 28)), 1);
 			
-			assertEquals((double) 300, bc.getAmount(DateUtil.getDate(2007, Calendar.APRIL, 1), DateUtil.getDate(2007, Calendar.MAY, 31)), 1);
-			assertEquals((double) 149, bc.getAmount(DateUtil.getDate(2007, Calendar.APRIL, 15), DateUtil.getDate(2007, Calendar.MAY, 15)), 1);
+			assertEquals((double) 300, bc.getAmountOfPeriod(DateUtil.getDate(2007, Calendar.APRIL, 1), DateUtil.getDate(2007, Calendar.MAY, 31)), 1);
+			assertEquals((double) 149, bc.getAmountOfPeriod(DateUtil.getDate(2007, Calendar.APRIL, 15), DateUtil.getDate(2007, Calendar.MAY, 15)), 1);
 			
 		}
 		catch (Exception e){
@@ -64,31 +64,31 @@ public class BudgetCategoryTest {
 		bc.setAmount(DateUtil.getDate(2007, Calendar.NOVEMBER, 12), 100);
 	
 		assertEquals(100l,
-				bc.getAmount(DateUtil.getDate(2007, Calendar.OCTOBER, 1)));
+				bc.getBudgetPeriodContainingDate(DateUtil.getDate(2007, Calendar.OCTOBER, 1)));
 		assertEquals(14l,
-				bc.getAmount(
-						DateUtil.getDate(2007, Calendar.OCTOBER, 1),
-						DateUtil.getDate(2007, Calendar.OCTOBER, 1)));		
+				bc.getAmountOfPeriod(
+                        DateUtil.getDate(2007, Calendar.OCTOBER, 1),
+                        DateUtil.getDate(2007, Calendar.OCTOBER, 1)));
 		assertEquals(28l,
-				bc.getAmount(
-						DateUtil.getDate(2007, Calendar.OCTOBER, 1),
-						DateUtil.getDate(2007, Calendar.OCTOBER, 2)));
+				bc.getAmountOfPeriod(
+                        DateUtil.getDate(2007, Calendar.OCTOBER, 1),
+                        DateUtil.getDate(2007, Calendar.OCTOBER, 2)));
 		assertEquals(100l,
-				bc.getAmount(
-						bct.getStartOfBudgetPeriod(DateUtil.getDate(2007, Calendar.OCTOBER, 1)),
-						bct.getEndOfBudgetPeriod(DateUtil.getDate(2007, Calendar.OCTOBER, 1))));
+				bc.getAmountOfPeriod(
+                        bct.getStartOfBudgetPeriod(DateUtil.getDate(2007, Calendar.OCTOBER, 1)),
+                        bct.getEndOfBudgetPeriod(DateUtil.getDate(2007, Calendar.OCTOBER, 1))));
 		assertEquals(200l,
-				bc.getAmount(
-						bct.getStartOfBudgetPeriod(DateUtil.getDate(2007, Calendar.OCTOBER, 1)),
-						bct.getEndOfBudgetPeriod(bct.getBudgetPeriodOffset(DateUtil.getDate(2007, Calendar.OCTOBER, 1), 1))));
+				bc.getAmountOfPeriod(
+                        bct.getStartOfBudgetPeriod(DateUtil.getDate(2007, Calendar.OCTOBER, 1)),
+                        bct.getEndOfBudgetPeriod(bct.getBudgetPeriodOffset(DateUtil.getDate(2007, Calendar.OCTOBER, 1), 1))));
 		assertEquals(400l,
-				bc.getAmount(
-						bct.getStartOfBudgetPeriod(DateUtil.getDate(2007, Calendar.OCTOBER, 1)),
-						bct.getEndOfBudgetPeriod(bct.getBudgetPeriodOffset(DateUtil.getDate(2007, Calendar.OCTOBER, 1), 3))));
+				bc.getAmountOfPeriod(
+                        bct.getStartOfBudgetPeriod(DateUtil.getDate(2007, Calendar.OCTOBER, 1)),
+                        bct.getEndOfBudgetPeriod(bct.getBudgetPeriodOffset(DateUtil.getDate(2007, Calendar.OCTOBER, 1), 3))));
 		assertEquals(442l,
-				bc.getAmount(
-						DateUtil.getDate(2007, Calendar.OCTOBER, 1),
-						DateUtil.getDate(2007, Calendar.OCTOBER, 31)));
+				bc.getAmountOfPeriod(
+                        DateUtil.getDate(2007, Calendar.OCTOBER, 1),
+                        DateUtil.getDate(2007, Calendar.OCTOBER, 31)));
 	}
 	
 	@Test
