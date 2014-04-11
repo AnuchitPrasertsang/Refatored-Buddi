@@ -112,21 +112,13 @@ public class BudgetCategoryImpl extends SourceImpl implements BudgetCategory {
     private long getAmountOfPeriod(Period period) {
         BudgetPeriod firstBudgetPeriod = createFirstBudgetPeriod(period);
         BudgetPeriod lastBudgetPeriod = createLastBudgetPeriod(period);
-        if (firstBudgetPeriod.equals(lastBudgetPeriod)) {
-            return (long) getAmountOfOverlappingDays(period, firstBudgetPeriod);
+
+        double totalAmount = 0;
+        for (BudgetPeriod budgetPeriod : getBudgetPeriods(firstBudgetPeriod, lastBudgetPeriod)) {
+            totalAmount += getAmountOfOverlappingDays(period, budgetPeriod);
         }
 
-        double totalStartPeriod = getAmountOfOverlappingDays(period, firstBudgetPeriod);
-
-        double totalInMiddle = 0;
-        for (BudgetPeriod budgetPeriod : getBudgetPeriods(
-                firstBudgetPeriod.nextBudgetPeriod(), lastBudgetPeriod.previousBudgetPeriod())) {
-            totalInMiddle += getAmountOfOverlappingDays(period, budgetPeriod);
-        }
-
-        double totalEndPeriod = getAmountOfOverlappingDays(period, lastBudgetPeriod);
-
-        return (long) (totalStartPeriod + totalInMiddle + totalEndPeriod);
+        return (long) totalAmount;
     }
 
     private double getAmountOfOverlappingDays(Period period, BudgetPeriod budgetPeriod) {
