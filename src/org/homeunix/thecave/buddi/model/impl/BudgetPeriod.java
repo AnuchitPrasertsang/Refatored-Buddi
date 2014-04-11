@@ -2,8 +2,9 @@ package org.homeunix.thecave.buddi.model.impl;
 
 import org.homeunix.thecave.buddi.model.BudgetCategoryType;
 
-import java.awt.*;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 public class BudgetPeriod {
     private Period period;
@@ -21,19 +22,15 @@ public class BudgetPeriod {
     }
 
     public BudgetPeriod nextBudgetPeriod() {
-        return new BudgetPeriod(type, type.getStartOfNextBudgetPeriod(period.getStartDate()));
+        return new BudgetPeriod(type, type.getBudgetPeriodOffset(period.getStartDate(), 1));
     }
 
     public Date getStartDate() {
         return period.getStartDate();
     }
 
-    public Date getEndDate() {
+    private Date getEndDate() {
         return period.getEndDate();
-    }
-
-    public BudgetPeriod previousBudgetPeriod() {
-        return new BudgetPeriod(type, type.getStartOfPreviousBudgetPeriod(period.getStartDate()));
     }
 
     public long getDayCount() {
@@ -42,5 +39,25 @@ public class BudgetPeriod {
 
     public Period getPeriod() {
         return period;
+    }
+
+    /**
+     * Returns a list of BudgetPeriods, covering the entire range of periods
+     * occupied by startDate to endDate.
+     *
+     *
+     * @param endBudgetPeriod @return
+     */
+    public List<BudgetPeriod> getBudgetPeriodsUntil(BudgetPeriod endBudgetPeriod) {
+        List<BudgetPeriod> budgetPeriods = new LinkedList<BudgetPeriod>();
+
+        BudgetPeriod current = this;
+
+        while (current.getStartDate().before(endBudgetPeriod.getEndDate())) {
+            budgetPeriods.add(current);
+            current = current.nextBudgetPeriod();
+        }
+
+        return budgetPeriods;
     }
 }

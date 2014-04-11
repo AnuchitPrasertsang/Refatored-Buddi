@@ -5,7 +5,6 @@ package org.homeunix.thecave.buddi.model.impl;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -114,7 +113,7 @@ public class BudgetCategoryImpl extends SourceImpl implements BudgetCategory {
         BudgetPeriod lastBudgetPeriod = createLastBudgetPeriod(period);
 
         double totalAmount = 0;
-        for (BudgetPeriod budgetPeriod : getBudgetPeriods(firstBudgetPeriod, lastBudgetPeriod)) {
+        for (BudgetPeriod budgetPeriod : firstBudgetPeriod.getBudgetPeriodsUntil(lastBudgetPeriod)) {
             totalAmount += getAmountOfOverlappingDays(period, budgetPeriod);
         }
 
@@ -136,36 +135,8 @@ public class BudgetCategoryImpl extends SourceImpl implements BudgetCategory {
         return new BudgetPeriod(getBudgetPeriodType(), period.getStartDate());
     }
 
-    private double getAmountInPeriod(Period period, BudgetPeriod budgetPeriod) {
-        long amountOfBudgetPeriod = getAmountOfBudgetPeriod(budgetPeriod);
-        long budgetPeriodDayCount = budgetPeriod.getDayCount();
-        long periodDayCount = period.getDayCount();
-        return (double) amountOfBudgetPeriod / (double) budgetPeriodDayCount * periodDayCount;
-    }
-
     private long getAmountOfBudgetPeriod(BudgetPeriod budgetPeriod) {
         return getBudgetPeriodContainingDate(budgetPeriod.getStartDate());
-    }
-
-    /**
-     * Returns a list of BudgetPeriods, covering the entire range of periods
-     * occupied by startDate to endDate.
-     *
-     *
-     * @param startBudgetPeriod
-     * @param endBudgetPeriod @return
-     */
-    public List<BudgetPeriod> getBudgetPeriods(BudgetPeriod startBudgetPeriod, BudgetPeriod endBudgetPeriod) {
-        List<BudgetPeriod> budgetPeriods = new LinkedList<BudgetPeriod>();
-
-        BudgetPeriod current = startBudgetPeriod;
-
-        while (current.getStartDate().before(endBudgetPeriod.getEndDate())) {
-            budgetPeriods.add(current);
-            current = current.nextBudgetPeriod();
-        }
-
-        return budgetPeriods;
     }
 
     /**

@@ -106,11 +106,4 @@ public abstract class BudgetCategoryType {
 	 */
 	public abstract String getKey();
 
-    public Date getStartOfNextBudgetPeriod(Date date) {
-        return getBudgetPeriodOffset(date, 1);
-    }
-
-    public Date getStartOfPreviousBudgetPeriod(Date date) {
-        return getBudgetPeriodOffset(date, -1);
-    }
 }
