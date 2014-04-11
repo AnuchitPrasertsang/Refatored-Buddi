@@ -119,10 +119,9 @@ public class BudgetCategoryImpl extends SourceImpl implements BudgetCategory {
         double totalStartPeriod = getAmountInPeriod(new Period(period.getStartDate(), firstBudgetPeriod.getEndDate()), firstBudgetPeriod);
 
         double totalInMiddle = 0;
-        for (String periodKey : getBudgetPeriods(
-                firstBudgetPeriod.nextBudgetPeriod().getStartDate(),
-                lastBudgetPeriod.previousBudgetPeriod().getStartDate())) {
-            totalInMiddle += getBudgetPeriodContainingDate(getPeriodDate(periodKey));
+        for (BudgetPeriod budgetPeriod : getBudgetPeriods(
+                firstBudgetPeriod.nextBudgetPeriod(), lastBudgetPeriod.previousBudgetPeriod())) {
+            totalInMiddle += getAmountOfBudgetPeriod(budgetPeriod);
         }
 
         double totalEndPeriod = getAmountInPeriod(new Period(lastBudgetPeriod.getStartDate(), period.getEndDate()), lastBudgetPeriod);
@@ -153,21 +152,21 @@ public class BudgetCategoryImpl extends SourceImpl implements BudgetCategory {
      * Returns a list of BudgetPeriods, covering the entire range of periods
      * occupied by startDate to endDate.
      *
-     * @param startDate
-     * @param endDate
-     * @return
+     *
+     * @param startBudgetPeriod
+     * @param endBudgetPeriod @return
      */
-    public List<String> getBudgetPeriods(Date startDate, Date endDate) {
-        List<String> budgetPeriodKeys = new LinkedList<String>();
+    public List<BudgetPeriod> getBudgetPeriods(BudgetPeriod startBudgetPeriod, BudgetPeriod endBudgetPeriod) {
+        List<BudgetPeriod> budgetPeriods = new LinkedList<BudgetPeriod>();
 
-        Date temp = getBudgetPeriodType().getStartOfBudgetPeriod(startDate);
+        BudgetPeriod current = startBudgetPeriod;
 
-        while (temp.before(getBudgetPeriodType().getEndOfBudgetPeriod(endDate))) {
-            budgetPeriodKeys.add(getPeriodKey(temp));
-            temp = getBudgetPeriodType().getBudgetPeriodOffset(temp, 1);
+        while (current.getStartDate().before(endBudgetPeriod.getEndDate())) {
+            budgetPeriods.add(current);
+            current = current.nextBudgetPeriod();
         }
 
-        return budgetPeriodKeys;
+        return budgetPeriods;
     }
 
     /**
