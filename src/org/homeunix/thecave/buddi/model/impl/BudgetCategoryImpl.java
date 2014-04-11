@@ -110,32 +110,24 @@ public class BudgetCategoryImpl extends SourceImpl implements BudgetCategory {
     }
 
     private long getAmountOfPeriod(Period period) {
-        //If Start and End are in the same budget period
         BudgetPeriod firstBudgetPeriod = createFirstBudgetPeriod(period);
         BudgetPeriod lastBudgetPeriod = createLastBudgetPeriod(period);
         if (firstBudgetPeriod.equals(lastBudgetPeriod)) {
             return (long) getAmountInPeriod(period.getStartDate(), period.getEndDate());
         }
 
-        //If the area between Start and End overlap at least two budget periods.
-        if (firstBudgetPeriod.nextBudgetPeriod().getStartDate().equals(lastBudgetPeriod.getStartDate())
-                || firstBudgetPeriod.nextBudgetPeriod().getStartDate().before(lastBudgetPeriod.getStartDate())) {
+        double totalStartPeriod = getAmountInPeriod(period.getStartDate(), firstBudgetPeriod.getEndDate());
 
-            double totalStartPeriod = getAmountInPeriod(period.getStartDate(), firstBudgetPeriod.getEndDate());
-
-            double totalInMiddle = 0;
-            for (String periodKey : getBudgetPeriods(
-                    firstBudgetPeriod.nextBudgetPeriod().getStartDate(),
-                    lastBudgetPeriod.previousBudgetPeriod().getStartDate())) {
-                totalInMiddle += getBudgetPeriodContainingDate(getPeriodDate(periodKey));
-            }
-
-            double totalEndPeriod = getAmountInPeriod(lastBudgetPeriod.getStartDate(), period.getEndDate());
-
-            return (long) (totalStartPeriod + totalInMiddle + totalEndPeriod);
+        double totalInMiddle = 0;
+        for (String periodKey : getBudgetPeriods(
+                firstBudgetPeriod.nextBudgetPeriod().getStartDate(),
+                lastBudgetPeriod.previousBudgetPeriod().getStartDate())) {
+            totalInMiddle += getBudgetPeriodContainingDate(getPeriodDate(periodKey));
         }
 
-        throw new RuntimeException("You should not be here.  We have returned all legitimate numbers from getBudgetPeriodContainingDate(Date, Date) in BudgetCategoryImpl.  Please contact Wyatt Olson with details on how you got here (what steps did you perform in Buddi to get this error message).");
+        double totalEndPeriod = getAmountInPeriod(lastBudgetPeriod.getStartDate(), period.getEndDate());
+
+        return (long) (totalStartPeriod + totalInMiddle + totalEndPeriod);
     }
 
     private BudgetPeriod createLastBudgetPeriod(Period period) {
