@@ -113,10 +113,10 @@ public class BudgetCategoryImpl extends SourceImpl implements BudgetCategory {
         BudgetPeriod firstBudgetPeriod = createFirstBudgetPeriod(period);
         BudgetPeriod lastBudgetPeriod = createLastBudgetPeriod(period);
         if (firstBudgetPeriod.equals(lastBudgetPeriod)) {
-            return (long) getAmountInPeriod(period.getStartDate(), period.getEndDate());
+            return (long) getAmountInPeriod(period);
         }
 
-        double totalStartPeriod = getAmountInPeriod(period.getStartDate(), firstBudgetPeriod.getEndDate());
+        double totalStartPeriod = getAmountInPeriod(new Period(period.getStartDate(), firstBudgetPeriod.getEndDate()));
 
         double totalInMiddle = 0;
         for (String periodKey : getBudgetPeriods(
@@ -125,7 +125,7 @@ public class BudgetCategoryImpl extends SourceImpl implements BudgetCategory {
             totalInMiddle += getBudgetPeriodContainingDate(getPeriodDate(periodKey));
         }
 
-        double totalEndPeriod = getAmountInPeriod(lastBudgetPeriod.getStartDate(), period.getEndDate());
+        double totalEndPeriod = getAmountInPeriod(new Period(lastBudgetPeriod.getStartDate(), period.getEndDate()));
 
         return (long) (totalStartPeriod + totalInMiddle + totalEndPeriod);
     }
@@ -138,10 +138,10 @@ public class BudgetCategoryImpl extends SourceImpl implements BudgetCategory {
         return new BudgetPeriod(getBudgetPeriodType(), period.getStartDate());
     }
 
-    private double getAmountInPeriod(Date startDate, Date endDate) {
-        long amount = getBudgetPeriodContainingDate(startDate);
-        long daysInPeriod = getBudgetPeriodType().getDaysInPeriod(startDate);
-        long daysBetween = DateUtil.getDaysBetween(startDate, endDate, true);
+    private double getAmountInPeriod(Period period) {
+        long amount = getBudgetPeriodContainingDate(period.getStartDate());
+        long daysInPeriod = getBudgetPeriodType().getDaysInPeriod(period.getStartDate());
+        long daysBetween = DateUtil.getDaysBetween(period.getStartDate(), period.getEndDate(), true);
         return (double) amount / (double) daysInPeriod * daysBetween;
     }
 
